@@ -1,6 +1,9 @@
 [workspace]
 resolver = "2"
 members = [
+  # utils 
+  "or_poisoned",
+
   # core
   "leptos",
   "leptos_dom",
@@ -42,6 +45,7 @@ leptos_config = { path = "./leptos_config", version = "0.6.5" }
 leptos_router = { path = "./router", version = "0.6.5" }
 leptos_meta = { path = "./meta", version = "0.6.5" }
 leptos_integration_utils = { path = "./integrations/utils", version = "0.6.5" }
+or_poisoned = { path = "./or_poisoned" }
 
 [profile.release]
 codegen-units = 1
