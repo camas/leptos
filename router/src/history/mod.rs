@@ -109,12 +109,26 @@ impl BrowserHashIntegration {
             .ok()
             .filter(|s| !s.is_null());
 
+        let base_uri = document().base_uri().unwrap().unwrap();
+        let base_uri_pathname = if base_uri.contains("://") {
+            Url::try_from(base_uri.as_str()).unwrap().pathname
+        } else {
+            base_uri
+        };
+        let base_uri_pathname = base_uri_pathname.trim_end_matches('/');
+
         let hash = loc.hash().unwrap_or_default();
         let hash = hash.strip_prefix("#/").unwrap_or(&hash);
+        let mut value = loc.pathname().unwrap_or_default()
+            + hash
+            + loc.search().unwrap_or_default().as_str();
+        if !base_uri_pathname.is_empty() {
+            if let Some(stripped) = value.strip_prefix(base_uri_pathname) {
+                value = stripped.to_string();
+            }
+        }
         LocationChange {
-            value: loc.pathname().unwrap_or_default()
-                + hash
-                + loc.search().unwrap_or_default().as_str(),
+            value,
             replace: true,
             scroll: true,
             state: State(state),
